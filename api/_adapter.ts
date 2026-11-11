@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { handleApiRequest } from '../src/server/core';
+import { handleApiRequest } from '../src/server/core.ts';
 
 /**
  * Robust Vercel Serverless Function Adapter

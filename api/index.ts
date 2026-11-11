@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { vercelHandler } from './_adapter';
+import { vercelHandler } from './_adapter.ts';
 
 /**
  * Vercel Serverless Root API Route: /api
