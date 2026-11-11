@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { vercelHandler } from '../_adapter.ts';
+import { vercelHandler } from '../adapter.js';
 
 /**
  * Dedicated Vercel Serverless Function: GET /api/download/proxy
