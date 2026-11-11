@@ -823,9 +823,9 @@ export function handleSampleUrls(): Response {
 export function handleStatus(): Response {
   return Response.json({
     status: 'online',
-    version: '4.0.0',
+    version: '4.1.0',
     service: 'InstaSave Media API',
-    runtime: 'Cloudflare Workers / Web Standards Edge Engine',
+    runtime: 'Vercel Serverless / Cloudflare Edge / Web Standards Engine',
     supportedCategories: ['video', 'reels', 'story', 'photo', 'audio'],
     ssrfProtection: 'active',
     rateLimiting: 'active',
@@ -834,10 +834,13 @@ export function handleStatus(): Response {
   });
 }
 
-// Global API Dispatcher for Cloudflare Pages / Workers
+// Global API Dispatcher for Vercel Serverless Functions / Cloudflare Pages / Workers
 export async function handleApiRequest(request: Request, _env?: any): Promise<Response> {
   const url = new URL(request.url);
   const path = url.pathname;
+  const cleanPath = path.replace(/\/+$/, '') || '/';
+
+  console.log(`[API ${request.method}] ${cleanPath}`);
 
   // CORS preflight
   if (request.method === 'OPTIONS') {
@@ -851,24 +854,30 @@ export async function handleApiRequest(request: Request, _env?: any): Promise<Re
     });
   }
 
-  if (path.endsWith('/api/extract') || path.endsWith('/extract')) {
+  if (cleanPath.endsWith('/api/extract') || cleanPath.endsWith('/extract')) {
     if (request.method !== 'POST') {
       return new Response('Method Not Allowed', { status: 405 });
     }
     return handleExtract(request);
   }
 
-  if (path.includes('/api/download/proxy') || path.includes('/download/proxy')) {
+  if (cleanPath.includes('/api/download/proxy') || cleanPath.includes('/download/proxy')) {
     return handleProxy(request);
   }
 
-  if (path.endsWith('/api/sample-urls') || path.endsWith('/sample-urls')) {
+  if (cleanPath.endsWith('/api/sample-urls') || cleanPath.endsWith('/sample-urls')) {
     return handleSampleUrls();
   }
 
-  if (path.endsWith('/api/status') || path.endsWith('/status')) {
+  if (
+    cleanPath.endsWith('/api/status') ||
+    cleanPath.endsWith('/status') ||
+    cleanPath === '/api' ||
+    cleanPath === '/'
+  ) {
     return handleStatus();
   }
 
-  return Response.json({ error: 'NOT_FOUND', message: 'API route not found' }, { status: 404 });
+  console.warn(`[API 404] Route not matched: ${cleanPath}`);
+  return Response.json({ error: 'NOT_FOUND', message: `API route '${cleanPath}' not found` }, { status: 404 });
 }
