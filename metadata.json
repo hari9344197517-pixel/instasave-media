@@ -1,0 +1,6 @@
+{
+  "name": "SnapSave - Instagram Media Downloader",
+  "description": "Premium online tool to download and preview Instagram videos, reels, photos, stories, highlights, audio, and DP safely.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
