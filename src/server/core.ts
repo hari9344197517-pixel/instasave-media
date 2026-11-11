@@ -856,7 +856,14 @@ export async function handleApiRequest(request: Request, _env?: any): Promise<Re
 
   if (cleanPath.endsWith('/api/extract') || cleanPath.endsWith('/extract')) {
     if (request.method !== 'POST') {
-      return new Response('Method Not Allowed', { status: 405 });
+      return Response.json(
+        {
+          success: false,
+          error: 'METHOD_NOT_ALLOWED',
+          message: 'The /api/extract endpoint only accepts POST requests with a JSON body.',
+        },
+        { status: 405 }
+      );
     }
     return handleExtract(request);
   }
@@ -879,5 +886,12 @@ export async function handleApiRequest(request: Request, _env?: any): Promise<Re
   }
 
   console.warn(`[API 404] Route not matched: ${cleanPath}`);
-  return Response.json({ error: 'NOT_FOUND', message: `API route '${cleanPath}' not found` }, { status: 404 });
+  return Response.json(
+    {
+      success: false,
+      error: 'NOT_FOUND',
+      message: `API route '${cleanPath}' not found`,
+    },
+    { status: 404 }
+  );
 }

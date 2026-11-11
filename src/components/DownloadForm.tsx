@@ -88,7 +88,37 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
         }),
       });
 
-      const data = await response.json();
+      let data: any = null;
+      const contentType = response.headers.get('content-type') || '';
+
+      if (contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch (jsonErr) {
+          console.error('[DownloadForm] JSON parsing failed:', jsonErr);
+          data = null;
+        }
+      } else {
+        const rawText = await response.text();
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          console.warn('[DownloadForm] Non-JSON payload received:', response.status, rawText.slice(0, 200));
+          setError(
+            !response.ok
+              ? `Server returned HTTP ${response.status}. Please ensure your Vercel deployment has finished building.`
+              : 'Unable to parse server response. Please try again or check the Instagram link.'
+          );
+          setLoading(false);
+          return;
+        }
+      }
+
+      if (!data) {
+        setError('Server returned an empty or unparseable response. Please verify the URL.');
+        setLoading(false);
+        return;
+      }
 
       if (!response.ok || !data.success) {
         setError(data.message || data.error || 'Failed to extract media. Please verify the URL.');
@@ -104,6 +134,7 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 150);
     } catch (err: any) {
+      console.error('[DownloadForm Network Error]:', err);
       setError(err.message || 'Network connection failed. Please check your internet connection.');
       setLoading(false);
     }

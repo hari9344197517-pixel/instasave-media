@@ -6,5 +6,5 @@ import { vercelHandler } from './_adapter';
  * Returns API service health status and active configuration.
  */
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
-  return vercelHandler(req, res);
+  return vercelHandler(req, res, '/api/status');
 }
