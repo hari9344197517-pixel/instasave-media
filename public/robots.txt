@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://snapsave.app/sitemap.xml
+Sitemap: https://instasavemedia.com/sitemap.xml

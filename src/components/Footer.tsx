@@ -4,11 +4,11 @@ import { useApp } from '../context/AppContext';
 import { DownloadCategory } from '../types';
 
 export const Footer: React.FC = () => {
-  const { setActiveTab, setOpenModal, t } = useApp();
+  const { setActiveTab, setOpenModal, navigateTo, setCookieSettingsOpen, t } = useApp();
 
   const handleToolClick = (cat: DownloadCategory) => {
     setActiveTab(cat);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateTo('home');
   };
 
   return (
@@ -26,11 +26,11 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
-              The world's leading web platform to save and preview Instagram videos, reels, stories, highlights, photos, audio tracks, and profile pictures in full high definition.
+              Web utility to preview and save authorized public Instagram videos, reels, stories, photos, and audio tracks in high definition.
             </p>
             <div className="pt-2 flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="w-4 h-4" />
-              <span>SSL Encrypted • 100% Free • No Scraped Private Data</span>
+              <span>HTTPS Encrypted • Free Tool • Public Media Only</span>
             </div>
           </div>
 
@@ -90,12 +90,26 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               <li>
-                <a href="#how-it-works" className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors">
+                <a
+                  href="/#how-it-works"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('home', '#how-it-works');
+                  }}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
+                >
                   {t.howItWorksTitle}
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors">
+                <a
+                  href="/#faq"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('home', '#faq');
+                  }}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
+                >
                   {t.faqTitle}
                 </a>
               </li>
@@ -115,58 +129,99 @@ export const Footer: React.FC = () => {
                   {t.shareWebsite}
                 </button>
               </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => setCookieSettingsOpen(true)}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
+                >
+                  Cookie Settings
+                </button>
+              </li>
             </ul>
           </div>
 
           {/* Column 3: Legal & Support */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
-              Legal & Support
+              Legal &amp; Support
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               <li>
-                <button
-                  onClick={() => setOpenModal('privacy')}
-                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
+                <a
+                  href="/privacy-policy"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('privacy');
+                  }}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
                 >
                   {t.privacyPolicy}
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => setOpenModal('terms')}
-                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
+                <a
+                  href="/terms"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('terms');
+                  }}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
                 >
                   {t.termsConditions}
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => setOpenModal('dmca')}
-                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
+                <a
+                  href="/dmca"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('dmca');
+                  }}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
                 >
                   {t.dmcaPolicy}
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => setOpenModal('about')}
-                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
+                <a
+                  href="/dmca"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('dmca');
+                  }}
+                  className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
+                >
+                  Report Content
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('about');
+                  }}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
                 >
                   {t.aboutUs}
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => setOpenModal('contact')}
-                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer flex items-center gap-1.5"
-                  title="Contact Support on WhatsApp (+91 7092145312)"
+                <a
+                  href="/contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('contact');
+                  }}
+                  className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors inline-flex items-center gap-1.5"
+                  title="Contact Support on Email or WhatsApp (+91 7092145312)"
                 >
                   <span>{t.contactUs}</span>
                   <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                     WhatsApp
                   </span>
-                </button>
+                </a>
               </li>
             </ul>
           </div>
@@ -175,17 +230,17 @@ export const Footer: React.FC = () => {
         {/* Platform Legal Disclaimer */}
         <div className="pt-6 border-t border-slate-200/60 dark:border-slate-800/60 text-[11px] text-slate-500 dark:text-slate-500 leading-relaxed text-center sm:text-left mb-6">
           <p>
-            <strong>Disclaimer:</strong> {t.disclaimerDesc} InstaSave Media does not host, clone, or store copyrighted video or audio content on its servers. All media streams are delivered directly from Meta / Instagram public CDNs. Users are solely responsible for ensuring they possess rights to download or archive any content.
+            <strong>Disclaimer:</strong> InstaSave Media is not affiliated with, endorsed by, or officially connected with Instagram or Meta Platforms, Inc. InstaSave Media does not host, clone, or store copyrighted video or audio content on its servers. Public content is not automatically copyright-free; users are solely responsible for ensuring they own or hold authorization to save any content.
           </p>
         </div>
 
         {/* Bottom Bar: Copyright */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400 pt-4 border-t border-slate-100 dark:border-slate-800/40">
           <div>
-            © {new Date().getFullYear()} InstaSave Media. {t.allRightsReserved}
+            © {new Date().getFullYear()} InstaSave Media (instasavemedia.com). {t.allRightsReserved}
           </div>
           <div className="flex items-center gap-1">
-            <span>Built with precision for seamless commuter & creator workflows</span>
+            <span>Built with privacy, security &amp; creator respect</span>
             <Heart className="w-3.5 h-3.5 text-pink-500 inline fill-pink-500" />
           </div>
         </div>

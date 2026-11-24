@@ -1,68 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://snapsave.app/</loc>
+    <loc>https://instasavemedia.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/?tab=video</loc>
+    <loc>https://instasavemedia.com/?tab=video</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/?tab=reels</loc>
+    <loc>https://instasavemedia.com/?tab=reels</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/?tab=story</loc>
+    <loc>https://instasavemedia.com/?tab=story</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/?tab=highlights</loc>
+    <loc>https://instasavemedia.com/?tab=photo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/?tab=photo</loc>
+    <loc>https://instasavemedia.com/?tab=audio</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/?tab=audio</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://instasavemedia.com/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/?tab=dp</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://instasavemedia.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/how-it-works</loc>
+    <loc>https://instasavemedia.com/privacy-policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/faq</loc>
+    <loc>https://instasavemedia.com/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://snapsave.app/privacy-policy</loc>
+    <loc>https://instasavemedia.com/dmca</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://snapsave.app/terms</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://snapsave.app/dmca</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
 </urlset>

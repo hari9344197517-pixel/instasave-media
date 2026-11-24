@@ -96,7 +96,8 @@ export async function vercelHandler(
       body,
     });
 
-    console.log(`[Vercel Serverless] ${req.method} -> ${fullUrl}`);
+    const safeLogPath = requestPath.split('?')[0];
+    console.log(`[Vercel Serverless] ${req.method} -> ${safeLogPath}`);
 
     // Call the core API handler with current environment variables
     const webResponse = await handleApiRequest(webRequest, process.env);
@@ -104,17 +105,11 @@ export async function vercelHandler(
     // Set HTTP status code
     res.statusCode = webResponse.status;
 
-    // Apply CORS headers to all responses
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-    // Transfer response headers from Web standard response
+    // Transfer all response headers (including origin-restricted CORS and nosniff headers)
     webResponse.headers.forEach((val, key) => {
-      if (!key.toLowerCase().startsWith('access-control-')) {
-        res.setHeader(key, val);
-      }
+      res.setHeader(key, val);
     });
+    res.setHeader('X-Content-Type-Options', 'nosniff');
 
     if (!webResponse.body) {
       res.end();
@@ -129,7 +124,7 @@ export async function vercelHandler(
       const text = await webResponse.text();
       res.end(text);
       const duration = Date.now() - startTime;
-      console.log(`[Vercel Serverless] Completed ${req.method} ${requestPath} -> ${webResponse.status} in ${duration}ms`);
+      console.log(`[Vercel Serverless] Completed ${req.method} ${safeLogPath} -> ${webResponse.status} in ${duration}ms`);
       return;
     }
 
@@ -143,18 +138,18 @@ export async function vercelHandler(
     res.end();
 
     const duration = Date.now() - startTime;
-    console.log(`[Vercel Serverless Stream] Completed ${req.method} ${requestPath} -> ${webResponse.status} in ${duration}ms`);
+    console.log(`[Vercel Serverless Stream] Completed ${req.method} ${safeLogPath} -> ${webResponse.status} in ${duration}ms`);
   } catch (error: any) {
-    console.error('[Vercel Serverless Fatal Error]:', error);
+    console.error('[Vercel Serverless Fatal Error]:', error?.name || 'Error');
     if (!res.headersSent) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
-      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
       res.end(
         JSON.stringify({
           success: false,
           error: 'SERVERLESS_EXECUTION_ERROR',
-          message: error?.message || 'An unexpected error occurred in Vercel serverless function.',
+          message: 'An unexpected server error occurred. Please try again later.',
         })
       );
     }

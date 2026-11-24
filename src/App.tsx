@@ -10,11 +10,13 @@ import { AdSenseSlot } from './components/AdSenseSlot';
 import { DownloadHistoryModal } from './components/DownloadHistoryModal';
 import { QrCodeModal } from './components/QrCodeModal';
 import { LegalModals } from './components/LegalModals';
+import { PolicyPages } from './components/PolicyPages';
+import { CookieConsent } from './components/CookieConsent';
 import { Footer } from './components/Footer';
 import { CheckCircle2 } from 'lucide-react';
 
 const MainContent: React.FC = () => {
-  const { toast } = useApp();
+  const { toast, currentPage } = useApp();
   const [qrModalData, setQrModalData] = useState<{ url: string; title: string } | null>(null);
 
   const handleOpenQr = (url: string, title: string) => {
@@ -35,35 +37,41 @@ const MainContent: React.FC = () => {
 
       {/* Main Body */}
       <main className="flex-1 pt-6 sm:pt-10 pb-16">
-        {/* Category Tabs: Video, Reels, Story, Highlights, Photo, Audio, DP */}
-        <CategoryTabs />
+        {currentPage === 'home' ? (
+          <>
+            {/* Category Tabs: Video, Reels, Story, Photo, Audio */}
+            <CategoryTabs />
 
-        {/* Hero Section & Download Interface */}
-        <DownloadForm onOpenQr={handleOpenQr} />
+            {/* Hero Section & Download Interface */}
+            <DownloadForm onOpenQr={handleOpenQr} />
 
-        {/* AdSense Slot 1: Below download interface */}
-        <AdSenseSlot slotId="ad-slot-post-download" className="my-8" />
+            {/* AdSense Slot 1: Below download interface */}
+            <AdSenseSlot slotId="ad-slot-post-download" className="my-8" />
 
-        {/* How It Works Section */}
-        <HowItWorks />
+            {/* How It Works Section */}
+            <HowItWorks />
 
-        {/* AdSense Slot 2: Between how-it-works and features */}
-        <AdSenseSlot slotId="ad-slot-mid-content" className="my-6" />
+            {/* AdSense Slot 2: Between how-it-works and features */}
+            <AdSenseSlot slotId="ad-slot-mid-content" className="my-6" />
 
-        {/* Features Highlights Grid */}
-        <FeaturesGrid />
+            {/* Features Highlights Grid */}
+            <FeaturesGrid />
 
-        {/* FAQ Accordion Section */}
-        <FaqSection />
+            {/* FAQ Accordion Section */}
+            <FaqSection />
 
-        {/* AdSense Slot 3: Above footer */}
-        <AdSenseSlot slotId="ad-slot-footer-lead" className="mt-8 mb-4" />
+            {/* AdSense Slot 3: Above footer */}
+            <AdSenseSlot slotId="ad-slot-footer-lead" className="mt-8 mb-4" />
+          </>
+        ) : (
+          <PolicyPages />
+        )}
       </main>
 
       {/* Footer */}
       <Footer />
 
-      {/* Modals */}
+      {/* Modals & Consent */}
       <DownloadHistoryModal />
       <QrCodeModal
         url={qrModalData?.url || null}
@@ -71,6 +79,7 @@ const MainContent: React.FC = () => {
         onClose={() => setQrModalData(null)}
       />
       <LegalModals />
+      <CookieConsent />
 
       {/* Toast Notification */}
       {toast && (

@@ -33,7 +33,7 @@ const LANGUAGES: { code: SupportedLanguage; label: string; flag: string }[] = [
 ];
 
 export const Header: React.FC = () => {
-  const { language, setLanguage, t, theme, toggleTheme, setActiveTab, history, setOpenModal } = useApp();
+  const { language, setLanguage, t, theme, toggleTheme, setActiveTab, navigateTo, history, setOpenModal } = useApp();
   const [toolsOpen, setToolsOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -159,13 +159,21 @@ export const Header: React.FC = () => {
           </div>
 
           <a
-            href="#how-it-works"
+            href="/#how-it-works"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('home', '#how-it-works');
+            }}
             className="px-3.5 py-2 rounded-lg hover:text-pink-600 dark:hover:text-pink-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
           >
             {t.navHowItWorks}
           </a>
           <a
-            href="#faq"
+            href="/#faq"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('home', '#faq');
+            }}
             className="px-3.5 py-2 rounded-lg hover:text-pink-600 dark:hover:text-pink-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
           >
             {t.navFaq}
@@ -307,15 +315,23 @@ export const Header: React.FC = () => {
 
           <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-around text-xs font-medium text-slate-600 dark:text-slate-400">
             <a
-              href="#how-it-works"
-              onClick={() => setMobileMenuOpen(false)}
+              href="/#how-it-works"
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                navigateTo('home', '#how-it-works');
+              }}
               className="hover:text-pink-500 py-1"
             >
               {t.navHowItWorks}
             </a>
             <a
-              href="#faq"
-              onClick={() => setMobileMenuOpen(false)}
+              href="/#faq"
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                navigateTo('home', '#faq');
+              }}
               className="hover:text-pink-500 py-1"
             >
               {t.navFaq}

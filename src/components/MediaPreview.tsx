@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   Music,
   Film,
+  Flag,
 } from 'lucide-react';
 import { ExtractionResult, MediaItem } from '../types';
 import { useApp } from '../context/AppContext';
@@ -28,7 +29,7 @@ interface MediaPreviewProps {
 }
 
 export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpenQr }) => {
-  const { addToHistory, showToast, t } = useApp();
+  const { addToHistory, showToast, navigateTo, t } = useApp();
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
@@ -63,7 +64,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
     url: currentItem?.url || '',
     thumbnail: currentItem?.thumbnail || '',
     quality: 'Original Audio (MP3 320kbps)',
-    downloadFilename: (currentItem?.downloadFilename || 'snapsave_media.mp4').replace(/\.mp4$/i, '') + '_audio.mp3',
+    downloadFilename: (currentItem?.downloadFilename || 'instasave_media.mp4').replace(/\.mp4$/i, '') + '_audio.mp3',
   };
 
   const formatSeconds = (sec: number) => {
@@ -554,7 +555,20 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="/dmca"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo('dmca');
+              }}
+              className="flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+              title="Report copyright or unauthorized content"
+            >
+              <Flag className="w-3.5 h-3.5" />
+              <span>Report Content</span>
+            </a>
+
             <a
               href={data.sourceUrl}
               target="_blank"

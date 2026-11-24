@@ -59,8 +59,13 @@ apiRouter.all('*', async (req: ExRequest, res: ExResponse) => {
     }
     res.end();
   } catch (err: any) {
+    console.error('[Local API Server Error]:', err?.name || 'Error');
     if (!res.headersSent) {
-      res.status(500).json({ success: false, error: 'SERVER_ERROR', message: err.message });
+      res.status(500).json({
+        success: false,
+        error: 'SERVER_ERROR',
+        message: 'An unexpected server error occurred. Please try again.',
+      });
     }
   }
 });

@@ -73,3 +73,14 @@ export interface CategoryInfo {
   description: string;
   supportedFormats: string[];
 }
+
+export type PageRoute = 'home' | 'about' | 'contact' | 'privacy' | 'terms' | 'dmca' | 'not-found';
+
+export interface CookieConsentState {
+  decided: boolean;
+  necessary: boolean;
+  analytics: boolean;
+  advertising: boolean;
+  updatedAt: string;
+}
+

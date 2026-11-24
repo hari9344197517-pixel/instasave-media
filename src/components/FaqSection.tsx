@@ -38,9 +38,9 @@ export const FaqSection: React.FC = () => {
         'When you provide an Instagram Reel link or video URL, InstaSave Media extracts the audio stream and prepares a high-bitrate 320 kbps MP3 file. Please ensure you have permission or rights from the creator before saving audio.',
     },
     {
-      question: 'How can I view or download someone\'s full-size profile picture (DP)?',
+      question: 'Which public Instagram media formats are supported?',
       answer:
-        'Simply paste the user\'s profile link (e.g., https://instagram.com/username) into the "DP" tab. SnapSave accesses the public uncropped source avatar in full 1080x1080 HD resolution.',
+        'InstaSave Media supports public Instagram Videos, Reels, current active Stories, Photos/Carousels, and Audio tracks using the five category tabs at the top of the page. Private accounts and login-restricted media are never accessed.',
     },
     {
       question: 'Where are my downloaded files saved on my device?',
@@ -50,7 +50,7 @@ export const FaqSection: React.FC = () => {
     {
       question: 'Is downloading Instagram content legal?',
       answer:
-        'Downloading public media for personal, offline viewing or archiving is generally permissible under fair use. However, you must not re-upload, monetize, or redistribute copyrighted content without explicit permission from the original creator.',
+        'Publicly visible Instagram media is still protected by copyright. You should only download content that you originally created, own the rights to, or have explicit permission from the copyright holder to archive. Never redistribute or monetize third-party work without authorization.',
     },
   ];
 

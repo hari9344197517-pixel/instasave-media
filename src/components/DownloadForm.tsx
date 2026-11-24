@@ -222,9 +222,14 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
 
         <span className="flex items-center gap-1">
           <HelpCircle className="w-3.5 h-3.5" />
-          Supports public posts, reels, stories & profiles
+          Supports public posts, reels &amp; stories you own or have permission to save
         </span>
       </div>
+
+      {/* Concise Copyright & Authorization Notice */}
+      <p className="mt-2 px-2 text-[11px] text-slate-500 dark:text-slate-400 text-center sm:text-left">
+        Public Instagram media is not automatically copyright-free. By proceeding, you confirm you own or have permission to archive this content.
+      </p>
 
       {/* Error Message Alert with Retry */}
       {error && (

@@ -1,6 +1,73 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { DownloadCategory, SupportedLanguage, HistoryEntry } from '../types';
+import {
+  DownloadCategory,
+  SupportedLanguage,
+  HistoryEntry,
+  PageRoute,
+  CookieConsentState,
+} from '../types';
 import { TRANSLATIONS, Translations } from '../data/translations';
+
+const COOKIE_STORAGE_KEY = 'instasavemedia_cookie_consent_v1';
+const SITE_ORIGIN = 'https://instasavemedia.com';
+
+const ROUTE_PATHS: Record<Exclude<PageRoute, 'not-found'>, string> = {
+  home: '/',
+  about: '/about',
+  contact: '/contact',
+  privacy: '/privacy-policy',
+  terms: '/terms',
+  dmca: '/dmca',
+};
+
+const PAGE_META: Record<PageRoute, { title: string; description: string; robots?: string }> = {
+  home: {
+    title: 'InstaSave Media - Instagram Media Downloader',
+    description:
+      'Online web utility to download and preview authorized public Instagram videos, reels, photos, stories, and audio safely.',
+  },
+  about: {
+    title: 'About InstaSave Media | Platform Principles & Safety',
+    description:
+      'Learn about InstaSave Media, our commitment to privacy, public-only media processing, security controls, and copyright compliance.',
+  },
+  contact: {
+    title: 'Contact Support | InstaSave Media',
+    description:
+      'Contact the InstaSave Media support team via email or official WhatsApp support for technical help, feedback, or inquiries.',
+  },
+  privacy: {
+    title: 'Privacy Policy | InstaSave Media',
+    description:
+      'Read the InstaSave Media Privacy Policy detailing transient URL handling, cookies, server logs, user rights, and advertising disclosures.',
+  },
+  terms: {
+    title: 'Terms & Conditions | InstaSave Media',
+    description:
+      'Review the InstaSave Media Terms and Conditions, acceptable use policy, copyright responsibilities, and non-affiliation disclaimer.',
+  },
+  dmca: {
+    title: 'DMCA & Copyright Policy | InstaSave Media',
+    description:
+      'Submit copyright takedown notices, report content, and review InstaSave Media intellectual property and DMCA compliance policies.',
+  },
+  'not-found': {
+    title: '404 Page Not Found | InstaSave Media',
+    description: 'The requested page could not be found on InstaSave Media.',
+    robots: 'noindex, nofollow',
+  },
+};
+
+function resolvePageFromPathname(pathname: string): PageRoute {
+  const clean = pathname.replace(/\/+$/, '') || '/';
+  if (clean === '/') return 'home';
+  if (clean === '/about') return 'about';
+  if (clean === '/contact') return 'contact';
+  if (clean === '/privacy-policy' || clean === '/privacy') return 'privacy';
+  if (clean === '/terms' || clean === '/terms-and-conditions') return 'terms';
+  if (clean === '/dmca' || clean === '/copyright') return 'dmca';
+  return 'not-found';
+}
 
 interface AppContextType {
   language: SupportedLanguage;
@@ -10,6 +77,8 @@ interface AppContextType {
   toggleTheme: () => void;
   activeTab: DownloadCategory;
   setActiveTab: (tab: DownloadCategory) => void;
+  currentPage: PageRoute;
+  navigateTo: (page: Exclude<PageRoute, 'not-found'>, hash?: string) => void;
   history: HistoryEntry[];
   addToHistory: (entry: Omit<HistoryEntry, 'id' | 'timestamp'>) => void;
   clearHistory: () => void;
@@ -19,7 +88,21 @@ interface AppContextType {
   showToast: (msg: string) => void;
   openModal: 'privacy' | 'terms' | 'dmca' | 'about' | 'contact' | 'history' | 'share' | null;
   setOpenModal: (modal: 'privacy' | 'terms' | 'dmca' | 'about' | 'contact' | 'history' | 'share' | null) => void;
+  cookieConsent: CookieConsentState;
+  cookieSettingsOpen: boolean;
+  setCookieSettingsOpen: (open: boolean) => void;
+  acceptAllCookies: () => void;
+  rejectNonEssentialCookies: () => void;
+  saveCookiePreferences: (prefs: { analytics: boolean; advertising: boolean }) => void;
 }
+
+const DEFAULT_COOKIE_CONSENT: CookieConsentState = {
+  decided: false,
+  necessary: true,
+  analytics: false,
+  advertising: false,
+  updatedAt: '',
+};
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -70,6 +153,74 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
+  // Page Route State
+  const [currentPage, setCurrentPage] = useState<PageRoute>(() => {
+    try {
+      return resolvePageFromPathname(window.location.pathname);
+    } catch {
+      return 'home';
+    }
+  });
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPage(resolvePageFromPathname(window.location.pathname));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Update SEO metadata (title, description, canonical, og:url, robots) per page
+  useEffect(() => {
+    const meta = PAGE_META[currentPage] || PAGE_META.home;
+    document.title = meta.title;
+
+    const descEl = document.querySelector('meta[name="description"]');
+    if (descEl) descEl.setAttribute('content', meta.description);
+
+    const ogTitleEl = document.querySelector('meta[property="og:title"]');
+    if (ogTitleEl) ogTitleEl.setAttribute('content', meta.title);
+
+    const ogDescEl = document.querySelector('meta[property="og:description"]');
+    if (ogDescEl) ogDescEl.setAttribute('content', meta.description);
+
+    const canonicalPath =
+      currentPage === 'not-found' ? window.location.pathname : ROUTE_PATHS[currentPage];
+    const canonicalUrl = `${SITE_ORIGIN}${canonicalPath === '/' ? '/' : canonicalPath}`;
+
+    const canonicalEl = document.querySelector('link[rel="canonical"]');
+    if (canonicalEl) canonicalEl.setAttribute('href', canonicalUrl);
+
+    const ogUrlEl = document.querySelector('meta[property="og:url"]');
+    if (ogUrlEl) ogUrlEl.setAttribute('content', canonicalUrl);
+
+    const robotsEl = document.querySelector('meta[name="robots"]');
+    if (robotsEl) robotsEl.setAttribute('content', meta.robots || 'index, follow');
+  }, [currentPage]);
+
+  const navigateTo = (page: Exclude<PageRoute, 'not-found'>, hash?: string) => {
+    const targetPath = ROUTE_PATHS[page];
+    try {
+      const nextUrl = hash ? `${targetPath}${hash}` : targetPath;
+      if (window.location.pathname !== targetPath || hash) {
+        window.history.pushState({}, '', nextUrl);
+      }
+    } catch {}
+    setCurrentPage(page);
+    setOpenModalState(null);
+
+    if (hash) {
+      setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 60);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   // Active Category Tab
   const [activeTab, setActiveTabState] = useState<DownloadCategory>(() => {
     try {
@@ -83,10 +234,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const setActiveTab = (tab: DownloadCategory) => {
     setActiveTabState(tab);
+    setCurrentPage('home');
     try {
-      const url = new URL(window.location.href);
+      const url = new URL(window.location.origin + '/');
       url.searchParams.set('tab', tab);
-      window.history.replaceState({}, '', url.toString());
+      window.history.replaceState({}, '', url.pathname + url.search);
     } catch {}
   };
 
@@ -127,7 +279,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       timestamp: Date.now(),
     };
     setHistory((prev) => {
-      // Avoid duplicate by downloadUrl or title
       const filtered = prev.filter((item) => item.title !== entry.title || item.downloadUrl !== entry.downloadUrl);
       const updated = [newEntry, ...filtered].slice(0, 30);
       try {
@@ -144,6 +295,76 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch {}
   };
 
+  // Cookie Consent State
+  const [cookieConsent, setCookieConsent] = useState<CookieConsentState>(() => {
+    try {
+      const raw = localStorage.getItem(COOKIE_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed?.decided === 'boolean') {
+          return {
+            decided: parsed.decided,
+            necessary: true,
+            analytics: Boolean(parsed.analytics),
+            advertising: Boolean(parsed.advertising),
+            updatedAt: parsed.updatedAt || '',
+          };
+        }
+      }
+    } catch {}
+    return DEFAULT_COOKIE_CONSENT;
+  });
+
+  const [cookieSettingsOpen, setCookieSettingsOpen] = useState(false);
+
+  const persistCookieConsent = (next: CookieConsentState, message: string) => {
+    setCookieConsent(next);
+    setCookieSettingsOpen(false);
+    try {
+      localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(next));
+    } catch {}
+    showToast(message);
+  };
+
+  const acceptAllCookies = () => {
+    persistCookieConsent(
+      {
+        decided: true,
+        necessary: true,
+        analytics: true,
+        advertising: true,
+        updatedAt: new Date().toISOString(),
+      },
+      'Cookie preferences saved (All categories enabled).'
+    );
+  };
+
+  const rejectNonEssentialCookies = () => {
+    persistCookieConsent(
+      {
+        decided: true,
+        necessary: true,
+        analytics: false,
+        advertising: false,
+        updatedAt: new Date().toISOString(),
+      },
+      'Cookie preferences saved (Only strictly necessary storage active).'
+    );
+  };
+
+  const saveCookiePreferences = (prefs: { analytics: boolean; advertising: boolean }) => {
+    persistCookieConsent(
+      {
+        decided: true,
+        necessary: true,
+        analytics: prefs.analytics,
+        advertising: prefs.advertising,
+        updatedAt: new Date().toISOString(),
+      },
+      'Your custom cookie preferences have been saved.'
+    );
+  };
+
   // Toast notifications
   const [toast, setToast] = useState<string | null>(null);
   const showToast = (msg: string) => {
@@ -153,8 +374,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }, 3200);
   };
 
-  // Modals
-  const [openModal, setOpenModal] = useState<'privacy' | 'terms' | 'dmca' | 'about' | 'contact' | 'history' | 'share' | null>(null);
+  // Modals (maps legal modals directly to dedicated routes while keeping share/history modals)
+  const [openModal, setOpenModalState] = useState<
+    'privacy' | 'terms' | 'dmca' | 'about' | 'contact' | 'history' | 'share' | null
+  >(null);
+
+  const setOpenModal = (
+    modal: 'privacy' | 'terms' | 'dmca' | 'about' | 'contact' | 'history' | 'share' | null
+  ) => {
+    if (
+      modal === 'privacy' ||
+      modal === 'terms' ||
+      modal === 'dmca' ||
+      modal === 'about' ||
+      modal === 'contact'
+    ) {
+      navigateTo(modal);
+      return;
+    }
+    setOpenModalState(modal);
+  };
 
   return (
     <AppContext.Provider
@@ -166,6 +405,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toggleTheme,
         activeTab,
         setActiveTab,
+        currentPage,
+        navigateTo,
         history,
         addToHistory,
         clearHistory,
@@ -175,6 +416,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         showToast,
         openModal,
         setOpenModal,
+        cookieConsent,
+        cookieSettingsOpen,
+        setCookieSettingsOpen,
+        acceptAllCookies,
+        rejectNonEssentialCookies,
+        saveCookiePreferences,
       }}
     >
       {children}
