@@ -162,10 +162,15 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
         >
           {/* Input field */}
           <div className="flex-1 flex items-center gap-2 sm:gap-3 px-3 py-2 sm:py-2.5">
-            <LinkIcon className="w-5 h-5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <LinkIcon className="w-5 h-5 text-slate-400 dark:text-slate-500 shrink-0" aria-hidden="true" />
+            <label htmlFor="instagram-url-input" className="sr-only">
+              Instagram media URL
+            </label>
             <input
+              id="instagram-url-input"
               ref={inputRef}
               type="text"
+              aria-label="Instagram media URL"
               value={url}
               onChange={(e) => {
                 setUrl(e.target.value);
@@ -179,6 +184,7 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
                 type="button"
                 onClick={handleClear}
                 title="Clear input"
+                aria-label="Clear input"
                 className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
@@ -237,7 +243,7 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
           <div className="flex items-start gap-3 w-full sm:w-auto flex-1">
             <AlertCircle className="w-5 h-5 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
             <div className="flex-1">
-              <h5 className="font-bold text-sm mb-1">Download Error</h5>
+              <p className="font-bold text-sm mb-1">Download Error</p>
               <p className="text-xs sm:text-sm leading-relaxed text-rose-900/90 dark:text-rose-200/90">{error}</p>
             </div>
           </div>
@@ -252,6 +258,7 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
             <button
               type="button"
               onClick={() => setError(null)}
+              aria-label="Dismiss error"
               className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-100/60 dark:hover:bg-rose-900/40 transition-colors cursor-pointer"
               title="Dismiss error"
             >

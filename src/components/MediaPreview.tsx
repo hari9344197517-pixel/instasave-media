@@ -233,7 +233,9 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
               {/* Big Centered Play/Pause Button Overlay (fades out when playing) */}
               {!isPlaying && (
                 <button
+                  type="button"
                   onClick={togglePlay}
+                  aria-label="Play video preview"
                   className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-blue-600/90 hover:bg-blue-600 text-white flex items-center justify-center shadow-xl backdrop-blur-xs transition-transform hover:scale-110 cursor-pointer z-10"
                 >
                   <Play className="w-8 h-8 fill-white ml-1" />
@@ -249,8 +251,10 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
 
                 {/* Sound Toggle */}
                 <button
+                  type="button"
                   onClick={toggleMute}
                   title={isMuted ? 'Unmute' : 'Mute'}
+                  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                   className="p-2 rounded-lg bg-black/60 hover:bg-black/80 text-white backdrop-blur-md transition-colors cursor-pointer border border-white/10"
                 >
                   {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4" />}
@@ -258,8 +262,10 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
 
                 {/* Fullscreen Control */}
                 <button
+                  type="button"
                   onClick={toggleFullscreen}
                   title="Fullscreen"
+                  aria-label="Toggle fullscreen"
                   className="p-2 rounded-lg bg-black/60 hover:bg-black/80 text-white backdrop-blur-md transition-colors cursor-pointer border border-white/10"
                 >
                   <Maximize2 className="w-4 h-4" />
@@ -269,7 +275,12 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
               {/* Bottom Video Progress & Duration Bar */}
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-6 flex items-center justify-between text-[11px] font-mono text-white/90 z-20">
                 <div className="flex items-center gap-2">
-                  <button onClick={togglePlay} className="hover:text-blue-400 transition-colors cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={togglePlay}
+                    aria-label={isPlaying ? 'Pause video' : 'Play video'}
+                    className="hover:text-blue-400 transition-colors cursor-pointer"
+                  >
                     {isPlaying ? <Pause className="w-3.5 h-3.5 fill-white" /> : <Play className="w-3.5 h-3.5 fill-white" />}
                   </button>
                   <span>{currentTime} / {videoDuration !== '0:00' ? videoDuration : currentItem.duration || '0:15'}</span>
@@ -333,15 +344,17 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
             <div className="w-full relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-950 aspect-4/3 sm:aspect-16/10 max-h-[500px] flex items-center justify-center shadow-lg group">
               <img
                 src={currentItem.thumbnail || currentItem.url}
-                alt={data.title}
+                alt={data.title || `Instagram photo preview from @${data.author.username}`}
                 referrerPolicy="no-referrer"
                 className="w-full h-full max-h-[500px] object-contain rounded-2xl"
               />
 
               {/* Zoom Modal Button */}
               <button
+                type="button"
                 onClick={() => setImageModalUrl(currentItem.url)}
                 title="View full resolution"
+                aria-label="View full resolution image"
                 className="absolute bottom-3 right-3 p-2 rounded-xl bg-black/60 hover:bg-black/80 text-white backdrop-blur-md transition-all cursor-pointer opacity-90 hover:opacity-100"
               >
                 <Maximize2 className="w-4 h-4" />
@@ -351,12 +364,16 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
               {isMultiItem && (
                 <>
                   <button
+                    type="button"
+                    aria-label="Previous carousel photo"
                     onClick={() => setCarouselIndex((prev) => (prev > 0 ? prev - 1 : data.items.length - 1))}
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md cursor-pointer transition-transform hover:scale-110"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
+                    type="button"
+                    aria-label="Next carousel photo"
                     onClick={() => setCarouselIndex((prev) => (prev < data.items.length - 1 ? prev + 1 : 0))}
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md cursor-pointer transition-transform hover:scale-110"
                   >
@@ -375,6 +392,8 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
                 {data.items.map((it, idx) => (
                   <button
                     key={it.id}
+                    type="button"
+                    aria-label={`Select carousel slide ${idx + 1} of ${data.items.length}`}
                     onClick={() => setCarouselIndex(idx)}
                     className={`w-14 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
                       carouselIndex === idx
@@ -382,7 +401,11 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
                         : 'border-transparent opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={it.thumbnail} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={it.thumbnail}
+                      alt={`Slide ${idx + 1} of ${data.title || `Instagram carousel by @${data.author.username}`}`}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -435,7 +458,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
               ) : (
                 <img
                   src={currentItem.thumbnail || currentItem.url}
-                  alt="Current Instagram Story"
+                  alt={`Public Instagram Story preview from @${data.author.username}`}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-contain"
                 />
@@ -593,12 +616,15 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
       {/* Image Zoom Modal */}
       {imageModalUrl && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Full resolution image preview"
           onClick={() => setImageModalUrl(null)}
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 backdrop-blur-md cursor-zoom-out animate-in fade-in duration-200"
         >
           <img
             src={imageModalUrl}
-            alt="Full Resolution View"
+            alt={`Full resolution preview of ${data.title || `Instagram media by @${data.author.username}`}`}
             referrerPolicy="no-referrer"
             className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
           />

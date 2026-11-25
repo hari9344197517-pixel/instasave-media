@@ -13,44 +13,44 @@ export const FaqSection: React.FC = () => {
 
   const faqs: FaqItem[] = [
     {
-      question: 'How do I download Instagram videos or Reels to my phone (iPhone or Android)?',
+      question: 'How do I use the Instagram Reels Downloader or Video Downloader on mobile?',
       answer:
-        'To download on mobile: 1) Open Instagram and tap the Share / Airplane icon on any public video or reel. 2) Tap "Copy Link". 3) Open Safari or Chrome and visit InstaSave Media. 4) Paste the link in the download box and tap Download. 5) Select 1080p Full HD to save the video directly to your Photos or Files app.',
+        'To save an authorized public video or Reel on iPhone or Android: 1) Open Instagram and tap the Share icon on your video or Reel. 2) Tap "Copy Link". 3) Visit InstaSave Media in Safari or Chrome, choose Reels or Video, and paste the link. 4) Click Download, preview the stream, and save the MP4 file to your Files or Photos app.',
     },
     {
-      question: 'Is InstaSave Media completely free to use? Are there download limits?',
+      question: 'Does InstaSave Media support Instagram Post Downloader and Photo carousel downloads?',
       answer:
-        'Yes! InstaSave Media is 100% free and unlimited. You do not need to purchase any subscription, enter credit card details, or install third-party software. You can download as many videos, photos, and reels as you need.',
+        'Yes. Whether you need the Instagram Post Downloader for single feed uploads or the Instagram Photo Downloader for multi-image carousels, paste any owner-authorized public post URL into the Photo or Video tab to preview individual slides and save JPEG photos or MP4 clips.',
     },
     {
-      question: 'Can InstaSave Media download media from Private Instagram accounts or stories?',
+      question: 'Is InstaSave Media free to use without creating an account?',
       answer:
-        'No. In strict compliance with Instagram terms of service, platform security, and user privacy laws, InstaSave Media does not scrape private accounts, bypass authentication, or access password-protected media. We only process publicly accessible posts, reels, and stories.',
+        'Yes. InstaSave Media is a free browser-based utility that does not require registration, software installation, or Instagram login credentials. Standard rate limits apply to keep the service reliable and protected against automated abuse.',
     },
     {
-      question: 'Do downloaded videos or reels include a watermark?',
+      question: 'Can InstaSave Media download media from Private Instagram accounts?',
       answer:
-        'No, InstaSave Media extracts the original raw video stream directly from the content delivery network. Your downloaded videos will not have any watermark, logo, or compression artifacts added by InstaSave Media.',
+        'No. In strict compliance with platform security and user privacy, InstaSave Media does not scrape private profiles, bypass login walls, or access restricted media. Only publicly accessible posts, reels, and stories are processed.',
     },
     {
-      question: 'How does the Instagram Audio / Music Downloader work?',
+      question: 'Do downloaded Reels or videos include any added watermark?',
       answer:
-        'When you provide an Instagram Reel link or video URL, InstaSave Media extracts the audio stream and prepares a high-bitrate 320 kbps MP3 file. Please ensure you have permission or rights from the creator before saving audio.',
+        'No. InstaSave Media relays the original media stream made available by the public content delivery network without adding watermarks, logos, or overlays.',
     },
     {
-      question: 'Which public Instagram media formats are supported?',
+      question: 'How does the Instagram Audio Downloader work?',
       answer:
-        'InstaSave Media supports public Instagram Videos, Reels, current active Stories, Photos/Carousels, and Audio tracks using the five category tabs at the top of the page. Private accounts and login-restricted media are never accessed.',
+        'When you enter an authorized public Instagram Reel or video URL under the Audio tab, InstaSave Media prepares the accompanying audio stream for browser preview and download. Only extract audio that you created or hold permission to use.',
     },
     {
-      question: 'Where are my downloaded files saved on my device?',
+      question: 'Where are downloaded files saved on my device?',
       answer:
-        'On PC and Mac, files are saved in your default "Downloads" folder. On Android, files appear in your "Downloads" album in Google Files or Gallery. On iPhone/iPad, Safari prompts to save to "Files" or directly into the Photos camera roll.',
+        'On Windows and Mac browsers, files go to your default Downloads folder. On Android, media appears in your Downloads directory or Gallery. On iPhone and iPad, Safari saves files to your Files app (where photos and videos can also be moved to Photos).',
     },
     {
       question: 'Is downloading Instagram content legal?',
       answer:
-        'Publicly visible Instagram media is still protected by copyright. You should only download content that you originally created, own the rights to, or have explicit permission from the copyright holder to archive. Never redistribute or monetize third-party work without authorization.',
+        'Publicly visible Instagram posts, Reels, videos, photos, and audio remain protected by copyright. You should only download content that you originally created, own the rights to, or have explicit permission from the copyright holder to archive.',
     },
   ];
 
@@ -72,25 +72,34 @@ export const FaqSection: React.FC = () => {
       <div className="space-y-3.5">
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;
+          const panelId = `faq-panel-${index}`;
           return (
             <div
               key={index}
               className="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-850 overflow-hidden transition-colors"
             >
-              <button
-                onClick={() => setOpenIndex(isOpen ? null : index)}
-                className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-slate-900 dark:text-white text-sm sm:text-base cursor-pointer hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
-              >
-                <span>{faq.question}</span>
-                <ChevronDown
-                  className={`w-5 h-5 shrink-0 text-slate-400 transition-transform duration-200 ${
-                    isOpen ? 'rotate-180 text-pink-500' : ''
-                  }`}
-                />
-              </button>
+              <h3 className="m-0">
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={panelId}
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-slate-900 dark:text-white text-sm sm:text-base cursor-pointer hover:text-pink-600 dark:hover:text-pink-400 transition-colors"
+                >
+                  <span>{faq.question}</span>
+                  <ChevronDown
+                    className={`w-5 h-5 shrink-0 text-slate-400 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 text-pink-500' : ''
+                    }`}
+                  />
+                </button>
+              </h3>
 
               {isOpen && (
-                <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3.5">
+                <div
+                  id={panelId}
+                  className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3.5"
+                >
                   {faq.answer}
                 </div>
               )}

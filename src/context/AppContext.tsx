@@ -22,34 +22,34 @@ const ROUTE_PATHS: Record<Exclude<PageRoute, 'not-found'>, string> = {
 
 const PAGE_META: Record<PageRoute, { title: string; description: string; robots?: string }> = {
   home: {
-    title: 'InstaSave Media - Instagram Media Downloader',
+    title: 'InstaSave Media – Instagram Reels, Post & Video Downloader',
     description:
-      'Online web utility to download and preview authorized public Instagram videos, reels, photos, stories, and audio safely.',
+      'Download owner-authorized public Instagram Reels, Posts, Videos, Photos, and Audio with InstaSave Media. Fast browser preview and MP4, JPEG, and MP3 export.',
   },
   about: {
-    title: 'About InstaSave Media | Platform Principles & Safety',
+    title: 'About InstaSave Media | Safety, Privacy & Purpose',
     description:
-      'Learn about InstaSave Media, our commitment to privacy, public-only media processing, security controls, and copyright compliance.',
+      'Learn how InstaSave Media supports lawful, owner-authorized public Instagram Reels, Post, Video, Photo, and Audio downloads with strong security controls.',
   },
   contact: {
     title: 'Contact Support | InstaSave Media',
     description:
-      'Contact the InstaSave Media support team via email or official WhatsApp support for technical help, feedback, or inquiries.',
+      'Reach the InstaSave Media support team via email or official WhatsApp support for technical help, policy questions, or copyright inquiries.',
   },
   privacy: {
     title: 'Privacy Policy | InstaSave Media',
     description:
-      'Read the InstaSave Media Privacy Policy detailing transient URL handling, cookies, server logs, user rights, and advertising disclosures.',
+      'Read the InstaSave Media Privacy Policy covering transient URL processing, browser localStorage, cookies, server logs, user rights, and ad disclosures.',
   },
   terms: {
     title: 'Terms & Conditions | InstaSave Media',
     description:
-      'Review the InstaSave Media Terms and Conditions, acceptable use policy, copyright responsibilities, and non-affiliation disclaimer.',
+      'Review InstaSave Media Terms and Conditions, acceptable lawful use rules, intellectual property responsibilities, and Meta non-affiliation disclosure.',
   },
   dmca: {
     title: 'DMCA & Copyright Policy | InstaSave Media',
     description:
-      'Submit copyright takedown notices, report content, and review InstaSave Media intellectual property and DMCA compliance policies.',
+      'Submit a copyright takedown notice, report unauthorized content, and review InstaSave Media DMCA compliance procedures.',
   },
   'not-found': {
     title: '404 Page Not Found | InstaSave Media',
@@ -118,6 +118,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return 'en';
   });
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   const setLanguage = (lang: SupportedLanguage) => {
     setLanguageState(lang);
     try {
@@ -170,7 +174,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Update SEO metadata (title, description, canonical, og:url, robots) per page
+  // Update SEO metadata (title, description, canonical, og/twitter tags, robots) per page
   useEffect(() => {
     const meta = PAGE_META[currentPage] || PAGE_META.home;
     document.title = meta.title;
@@ -184,18 +188,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const ogDescEl = document.querySelector('meta[property="og:description"]');
     if (ogDescEl) ogDescEl.setAttribute('content', meta.description);
 
-    const canonicalPath =
-      currentPage === 'not-found' ? window.location.pathname : ROUTE_PATHS[currentPage];
-    const canonicalUrl = `${SITE_ORIGIN}${canonicalPath === '/' ? '/' : canonicalPath}`;
+    const twitterTitleEl = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitleEl) twitterTitleEl.setAttribute('content', meta.title);
 
-    const canonicalEl = document.querySelector('link[rel="canonical"]');
-    if (canonicalEl) canonicalEl.setAttribute('href', canonicalUrl);
-
-    const ogUrlEl = document.querySelector('meta[property="og:url"]');
-    if (ogUrlEl) ogUrlEl.setAttribute('content', canonicalUrl);
+    const twitterDescEl = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDescEl) twitterDescEl.setAttribute('content', meta.description);
 
     const robotsEl = document.querySelector('meta[name="robots"]');
     if (robotsEl) robotsEl.setAttribute('content', meta.robots || 'index, follow');
+
+    if (currentPage === 'not-found') {
+      const existingCanonical = document.querySelector('link[rel="canonical"]');
+      if (existingCanonical) existingCanonical.remove();
+      const ogUrlEl = document.querySelector('meta[property="og:url"]');
+      if (ogUrlEl) ogUrlEl.removeAttribute('content');
+    } else {
+      const canonicalPath = ROUTE_PATHS[currentPage];
+      const canonicalUrl = `${SITE_ORIGIN}${canonicalPath === '/' ? '/' : canonicalPath}`;
+
+      let canonicalEl = document.querySelector('link[rel="canonical"]');
+      if (!canonicalEl) {
+        canonicalEl = document.createElement('link');
+        canonicalEl.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonicalEl);
+      }
+      canonicalEl.setAttribute('href', canonicalUrl);
+
+      const ogUrlEl = document.querySelector('meta[property="og:url"]');
+      if (ogUrlEl) ogUrlEl.setAttribute('content', canonicalUrl);
+    }
   }, [currentPage]);
 
   const navigateTo = (page: Exclude<PageRoute, 'not-found'>, hash?: string) => {

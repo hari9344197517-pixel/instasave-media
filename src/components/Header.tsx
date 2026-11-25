@@ -107,24 +107,35 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Center: Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
-          <button
-            onClick={() => handleSelectCategory('video')}
+        <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+          <a
+            href="/?tab=video"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSelectCategory('video');
+            }}
             className="px-3.5 py-2 rounded-lg hover:text-pink-600 dark:hover:text-pink-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap cursor-pointer"
           >
             {t.navVideo}
-          </button>
-          <button
-            onClick={() => handleSelectCategory('story')}
+          </a>
+          <a
+            href="/?tab=story"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSelectCategory('story');
+            }}
             className="px-3.5 py-2 rounded-lg hover:text-pink-600 dark:hover:text-pink-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap cursor-pointer"
           >
             {t.navStory}
-          </button>
+          </a>
 
           {/* Other Tools Dropdown */}
           <div className="relative" ref={toolsRef}>
             <button
+              type="button"
               onClick={() => setToolsOpen(!toolsOpen)}
+              aria-expanded={toolsOpen}
+              aria-haspopup="true"
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg hover:text-pink-600 dark:hover:text-pink-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap cursor-pointer"
             >
               <span>{t.navOtherTools}</span>
@@ -133,27 +144,39 @@ export const Header: React.FC = () => {
 
             {toolsOpen && (
               <div className="absolute left-0 mt-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl border border-slate-200 dark:border-slate-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                <button
-                  onClick={() => handleSelectCategory('reels')}
+                <a
+                  href="/?tab=reels"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSelectCategory('reels');
+                  }}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer"
                 >
                   <Film className="w-4 h-4 text-pink-500" />
                   <span>{t.navReels}</span>
-                </button>
-                <button
-                  onClick={() => handleSelectCategory('photo')}
+                </a>
+                <a
+                  href="/?tab=photo"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSelectCategory('photo');
+                  }}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer"
                 >
                   <ImageIcon className="w-4 h-4 text-violet-500" />
                   <span>{t.navPhoto}</span>
-                </button>
-                <button
-                  onClick={() => handleSelectCategory('audio')}
+                </a>
+                <a
+                  href="/?tab=audio"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSelectCategory('audio');
+                  }}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer"
                 >
                   <Music className="w-4 h-4 text-emerald-500" />
                   <span>{t.navAudio}</span>
-                </button>
+                </a>
               </div>
             )}
           </div>
@@ -184,8 +207,10 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* History Button */}
           <button
+            type="button"
             onClick={() => setOpenModal('history')}
             title={t.historyTitle}
+            aria-label={t.historyTitle}
             className="relative p-2 sm:px-3 sm:py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer text-sm font-medium"
           >
             <History className="w-4 h-4" />
@@ -199,8 +224,10 @@ export const Header: React.FC = () => {
 
           {/* Share button */}
           <button
+            type="button"
             onClick={handleShare}
             title={t.shareWebsite}
+            aria-label={t.shareWebsite}
             className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <Share2 className="w-4 h-4" />
@@ -209,7 +236,11 @@ export const Header: React.FC = () => {
           {/* Language Selector Dropdown */}
           <div className="relative" ref={langRef}>
             <button
+              type="button"
               onClick={() => setLangOpen(!langOpen)}
+              aria-label="Select Language"
+              aria-expanded={langOpen}
+              aria-haspopup="true"
               className="flex items-center gap-1.5 p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs sm:text-sm font-medium cursor-pointer transition-colors"
             >
               <Globe className="w-4 h-4 text-violet-500" />
@@ -225,6 +256,7 @@ export const Header: React.FC = () => {
                 {LANGUAGES.map((item) => (
                   <button
                     key={item.code}
+                    type="button"
                     onClick={() => {
                       setLanguage(item.code);
                       setLangOpen(false);
@@ -248,8 +280,10 @@ export const Header: React.FC = () => {
 
           {/* Theme Toggle (Sun/Moon) */}
           <button
+            type="button"
             onClick={toggleTheme}
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
           >
             {theme === 'dark' ? (
@@ -261,7 +295,10 @@ export const Header: React.FC = () => {
 
           {/* Mobile Menu Hamburger */}
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
             className="lg:hidden p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -271,46 +308,66 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-6 space-y-2 animate-in fade-in slide-in-from-top-4 duration-200">
+        <nav aria-label="Mobile navigation" className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-6 space-y-2 animate-in fade-in slide-in-from-top-4 duration-200">
           <div className="text-xs font-bold text-slate-400 uppercase tracking-wider px-2 py-1">
             Download Categories
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => handleSelectCategory('video')}
+            <a
+              href="/?tab=video"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSelectCategory('video');
+              }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >
               <Video className="w-4 h-4 text-pink-500" />
               <span>{t.tab_video}</span>
-            </button>
-            <button
-              onClick={() => handleSelectCategory('reels')}
+            </a>
+            <a
+              href="/?tab=reels"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSelectCategory('reels');
+              }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >
               <Film className="w-4 h-4 text-violet-500" />
               <span>{t.tab_reels}</span>
-            </button>
-            <button
-              onClick={() => handleSelectCategory('story')}
+            </a>
+            <a
+              href="/?tab=story"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSelectCategory('story');
+              }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >
               <Clock className="w-4 h-4 text-amber-500" />
               <span>{t.tab_story}</span>
-            </button>
-            <button
-              onClick={() => handleSelectCategory('photo')}
+            </a>
+            <a
+              href="/?tab=photo"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSelectCategory('photo');
+              }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >
               <ImageIcon className="w-4 h-4 text-blue-500" />
               <span>{t.tab_photo}</span>
-            </button>
-            <button
-              onClick={() => handleSelectCategory('audio')}
+            </a>
+            <a
+              href="/?tab=audio"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSelectCategory('audio');
+              }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >
               <Music className="w-4 h-4 text-emerald-500" />
               <span>{t.tab_audio}</span>
-            </button>
+            </a>
           </div>
 
           <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-around text-xs font-medium text-slate-600 dark:text-slate-400">
@@ -337,16 +394,17 @@ export const Header: React.FC = () => {
               {t.navFaq}
             </a>
             <button
+              type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
                 setOpenModal('history');
               }}
-              className="hover:text-pink-500 py-1"
+              className="hover:text-pink-500 py-1 cursor-pointer"
             >
               {t.navHistory} ({history.length})
             </button>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );

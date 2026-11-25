@@ -30,7 +30,12 @@ export const DownloadHistoryModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={t.historyTitle}
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+    >
       <div className="w-full max-w-xl max-h-[85vh] rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -48,8 +53,10 @@ export const DownloadHistoryModal: React.FC = () => {
             </div>
           </div>
           <button
+            type="button"
             onClick={() => setOpenModal(null)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            aria-label="Close download history"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -62,6 +69,10 @@ export const DownloadHistoryModal: React.FC = () => {
             <span>Save downloads history on this device</span>
           </span>
           <button
+            type="button"
+            role="switch"
+            aria-checked={historyConsent}
+            aria-label="Save downloads history on this device"
             onClick={() => setHistoryConsent(!historyConsent)}
             className={`w-10 h-5 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               historyConsent ? 'bg-pink-600 justify-end' : 'bg-slate-300 dark:bg-slate-700 justify-start'
@@ -87,13 +98,13 @@ export const DownloadHistoryModal: React.FC = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <img
                     src={item.thumbnail}
-                    alt=""
+                    alt={`Preview thumbnail for ${item.title}`}
                     className="w-11 h-11 rounded-lg object-cover bg-slate-200 dark:bg-slate-700 shrink-0"
                   />
                   <div className="min-w-0">
-                    <h5 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
+                    <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
                       {item.title}
-                    </h5>
+                    </p>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2">
                       <span>@{item.author}</span>
                       <span>• {item.quality}</span>
@@ -103,8 +114,10 @@ export const DownloadHistoryModal: React.FC = () => {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => handleReDownload(item)}
                   title="Re-download file"
+                  aria-label={`Re-download ${item.title}`}
                   className="p-2 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 shrink-0 transition-colors cursor-pointer"
                 >
                   <Download className="w-4 h-4" />

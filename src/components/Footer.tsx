@@ -36,58 +36,78 @@ export const Footer: React.FC = () => {
 
           {/* Column 1: Download Tools */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
               Media Tools
-            </h4>
+            </h2>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               <li>
-                <button
-                  onClick={() => handleToolClick('video')}
+                <a
+                  href="/?tab=video"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleToolClick('video');
+                  }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
                   {t.tab_video} Downloader
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleToolClick('reels')}
+                <a
+                  href="/?tab=reels"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleToolClick('reels');
+                  }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
                   {t.tab_reels} Downloader
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleToolClick('story')}
+                <a
+                  href="/?tab=story"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleToolClick('story');
+                  }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
                   {t.tab_story} Downloader
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleToolClick('photo')}
+                <a
+                  href="/?tab=photo"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleToolClick('photo');
+                  }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
                   {t.tab_photo} Downloader
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleToolClick('audio')}
+                <a
+                  href="/?tab=audio"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleToolClick('audio');
+                  }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
                   {t.tab_audio} Downloader
-                </button>
+                </a>
               </li>
             </ul>
           </div>
 
           {/* Column 2: Resources & Quick Links */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
               Resources
-            </h4>
+            </h2>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               <li>
                 <a
@@ -115,6 +135,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => setOpenModal('history')}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
@@ -123,6 +144,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => setOpenModal('share')}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
@@ -143,9 +165,9 @@ export const Footer: React.FC = () => {
 
           {/* Column 3: Legal & Support */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
               Legal &amp; Support
-            </h4>
+            </h2>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               <li>
                 <a

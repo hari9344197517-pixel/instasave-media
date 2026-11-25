@@ -5,6 +5,7 @@ import { CategoryTabs } from './components/CategoryTabs';
 import { DownloadForm } from './components/DownloadForm';
 import { HowItWorks } from './components/HowItWorks';
 import { FeaturesGrid } from './components/FeaturesGrid';
+import { SupportedToolsSection } from './components/SupportedToolsSection';
 import { FaqSection } from './components/FaqSection';
 import { AdSenseSlot } from './components/AdSenseSlot';
 import { DownloadHistoryModal } from './components/DownloadHistoryModal';
@@ -56,6 +57,9 @@ const MainContent: React.FC = () => {
 
             {/* Features Highlights Grid */}
             <FeaturesGrid />
+
+            {/* Supported Downloader Tools Guide (SEO Content) */}
+            <SupportedToolsSection />
 
             {/* FAQ Accordion Section */}
             <FaqSection />
