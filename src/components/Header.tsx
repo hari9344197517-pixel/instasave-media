@@ -66,9 +66,9 @@ export const Header: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'InstaSave Media - Instagram Downloader',
-          text: 'Download Instagram Reels, Videos, Stories & Photos in 1080p Full HD for free with InstaSave Media!',
-          url: window.location.href,
+          title: 'InstaSave Media – Instagram Reels, Post & Video Downloader',
+          text: 'Preview and save owner-authorized public Instagram Reels, Posts, Videos, Photos, and Audio with InstaSave Media.',
+          url: `https://instasavemedia.com${typeof window !== 'undefined' ? window.location.pathname : '/'}`,
         });
       } catch {
         // User cancelled or share failed, open modal

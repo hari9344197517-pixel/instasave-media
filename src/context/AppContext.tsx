@@ -202,6 +202,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (existingCanonical) existingCanonical.remove();
       const ogUrlEl = document.querySelector('meta[property="og:url"]');
       if (ogUrlEl) ogUrlEl.removeAttribute('content');
+      const twitterUrlEl = document.querySelector('meta[name="twitter:url"]');
+      if (twitterUrlEl) twitterUrlEl.removeAttribute('content');
     } else {
       const canonicalPath = ROUTE_PATHS[currentPage];
       const canonicalUrl = `${SITE_ORIGIN}${canonicalPath === '/' ? '/' : canonicalPath}`;
@@ -216,6 +218,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const ogUrlEl = document.querySelector('meta[property="og:url"]');
       if (ogUrlEl) ogUrlEl.setAttribute('content', canonicalUrl);
+
+      const twitterUrlEl = document.querySelector('meta[name="twitter:url"]');
+      if (twitterUrlEl) twitterUrlEl.setAttribute('content', canonicalUrl);
     }
   }, [currentPage]);
 
