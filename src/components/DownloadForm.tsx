@@ -19,7 +19,7 @@ interface DownloadFormProps {
 }
 
 export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
-  const { activeTab, t, showToast } = useApp();
+  const { activeTab, currentPage, t, showToast } = useApp();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,6 +28,22 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
   const resultRef = useRef<HTMLDivElement>(null);
 
   const currentCategory = CATEGORIES.find((c) => c.id === activeTab) || CATEGORIES[0];
+
+  const heroHeading =
+    currentPage === 'home' && activeTab === 'video'
+      ? 'Instagram Video, Reels & Post Downloader'
+      : currentPage === 'reels-downloader'
+      ? 'Instagram Reels Downloader'
+      : currentPage === 'video-downloader'
+      ? 'Instagram Video Downloader'
+      : currentPage === 'photo-downloader'
+      ? 'Instagram Photo & Post Downloader'
+      : currentCategory.heroHeading;
+
+  const heroSubtitle =
+    currentPage === 'home' && activeTab === 'video'
+      ? 'Download publicly accessible Instagram Reels, videos and posts you are authorized to save directly in your browser.'
+      : currentCategory.heroSubtitle;
 
   // When activeTab changes, update placeholder and reset result
   useEffect(() => {
@@ -146,11 +162,11 @@ export const DownloadForm: React.FC<DownloadFormProps> = ({ onOpenQr }) => {
       <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight sm:leading-tight mb-3">
           <span className="bg-gradient-to-r from-violet-600 via-pink-600 to-indigo-600 dark:from-violet-400 dark:via-pink-400 dark:to-indigo-300 bg-clip-text text-transparent">
-            {currentCategory.heroHeading}
+            {heroHeading}
           </span>
         </h1>
         <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          {currentCategory.heroSubtitle}
+          {heroSubtitle}
         </p>
       </div>
 

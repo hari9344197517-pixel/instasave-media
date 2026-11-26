@@ -13,6 +13,9 @@ const SITE_ORIGIN = 'https://instasavemedia.com';
 
 const ROUTE_PATHS: Record<Exclude<PageRoute, 'not-found'>, string> = {
   home: '/',
+  'reels-downloader': '/instagram-reels-downloader',
+  'video-downloader': '/instagram-video-downloader',
+  'photo-downloader': '/instagram-photo-downloader',
   about: '/about',
   contact: '/contact',
   privacy: '/privacy-policy',
@@ -22,38 +25,53 @@ const ROUTE_PATHS: Record<Exclude<PageRoute, 'not-found'>, string> = {
 
 const PAGE_META: Record<PageRoute, { title: string; description: string; robots?: string }> = {
   home: {
-    title: 'InstaSave Media – Instagram Reels, Post & Video Downloader',
+    title: 'Instagram Video, Reels & Post Downloader – InstaSaveMedia',
     description:
-      'Download owner-authorized public Instagram Reels, Posts, Videos, Photos, and Audio with InstaSave Media. Fast browser preview and MP4, JPEG, and MP3 export.',
+      'Download publicly accessible Instagram Reels, videos and posts you are authorized to save with InstaSaveMedia. Fast, simple and free online downloader.',
+  },
+  'reels-downloader': {
+    title: 'Instagram Reels Downloader (MP4) – InstaSaveMedia',
+    description:
+      'Download publicly accessible Instagram Reels you own or have permission to save in clean MP4 quality with InstaSaveMedia on mobile and desktop.',
+  },
+  'video-downloader': {
+    title: 'Instagram Video Downloader (HD MP4) – InstaSaveMedia',
+    description:
+      'Save publicly accessible Instagram videos you are authorized to download in MP4 format directly in your browser using InstaSaveMedia.',
+  },
+  'photo-downloader': {
+    title: 'Instagram Photo & Post Downloader – InstaSaveMedia',
+    description:
+      'Download publicly accessible Instagram photos, feed posts, and carousel slides you own or hold permission to save with InstaSaveMedia.',
   },
   about: {
-    title: 'About InstaSave Media | Safety, Privacy & Purpose',
+    title: 'About InstaSaveMedia | Safety, Privacy & Purpose',
     description:
-      'Learn how InstaSave Media supports lawful, owner-authorized public Instagram Reels, Post, Video, Photo, and Audio downloads with strong security controls.',
+      'Learn how InstaSaveMedia supports lawful, owner-authorized public Instagram Reels, Post, Video, Photo, and Audio downloads with strong security controls.',
   },
   contact: {
-    title: 'Contact Support | InstaSave Media',
+    title: 'Contact Support | InstaSaveMedia',
     description:
-      'Reach the InstaSave Media support team via email or official WhatsApp support for technical help, policy questions, or copyright inquiries.',
+      'Reach the InstaSaveMedia support team via email or official WhatsApp support for technical help, policy questions, or copyright inquiries.',
   },
   privacy: {
-    title: 'Privacy Policy | InstaSave Media',
+    title: 'Privacy Policy | InstaSaveMedia',
     description:
-      'Read the InstaSave Media Privacy Policy covering transient URL processing, browser localStorage, cookies, server logs, user rights, and ad disclosures.',
+      'Read the InstaSaveMedia Privacy Policy covering transient URL processing, browser localStorage, cookies, server logs, user rights, and ad disclosures.',
   },
   terms: {
-    title: 'Terms & Conditions | InstaSave Media',
+    title: 'Terms & Conditions | InstaSaveMedia',
     description:
-      'Review InstaSave Media Terms and Conditions, acceptable lawful use rules, intellectual property responsibilities, and Meta non-affiliation disclosure.',
+      'Review InstaSaveMedia Terms and Conditions, acceptable lawful use rules, intellectual property responsibilities, and Meta non-affiliation disclosure.',
   },
   dmca: {
-    title: 'DMCA & Copyright Policy | InstaSave Media',
+    title: 'DMCA & Copyright Policy | InstaSaveMedia',
     description:
-      'Submit a copyright takedown notice, report unauthorized content, and review InstaSave Media DMCA compliance procedures.',
+      'Submit a copyright takedown notice, report unauthorized content, and review InstaSaveMedia DMCA compliance procedures.',
   },
   'not-found': {
-    title: '404 Page Not Found | InstaSave Media',
-    description: 'The requested page could not be found on InstaSave Media.',
+    title: '404 Page Not Found | InstaSaveMedia',
+    description: 'The requested page could not be found on InstaSaveMedia.',
     robots: 'noindex, nofollow',
   },
 };
@@ -61,12 +79,22 @@ const PAGE_META: Record<PageRoute, { title: string; description: string; robots?
 function resolvePageFromPathname(pathname: string): PageRoute {
   const clean = pathname.replace(/\/+$/, '') || '/';
   if (clean === '/') return 'home';
+  if (clean === '/instagram-reels-downloader') return 'reels-downloader';
+  if (clean === '/instagram-video-downloader') return 'video-downloader';
+  if (clean === '/instagram-photo-downloader') return 'photo-downloader';
   if (clean === '/about') return 'about';
   if (clean === '/contact') return 'contact';
   if (clean === '/privacy-policy' || clean === '/privacy') return 'privacy';
   if (clean === '/terms' || clean === '/terms-and-conditions') return 'terms';
   if (clean === '/dmca' || clean === '/copyright') return 'dmca';
   return 'not-found';
+}
+
+function getDefaultTabForPage(page: PageRoute): DownloadCategory | null {
+  if (page === 'reels-downloader') return 'reels';
+  if (page === 'video-downloader') return 'video';
+  if (page === 'photo-downloader') return 'photo';
+  return null;
 }
 
 interface AppContextType {
@@ -168,7 +196,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPage(resolvePageFromPathname(window.location.pathname));
+      const nextPage = resolvePageFromPathname(window.location.pathname);
+      setCurrentPage(nextPage);
+      const forcedTab = getDefaultTabForPage(nextPage);
+      if (forcedTab) {
+        setActiveTabState(forcedTab);
+      } else if (nextPage === 'home') {
+        const params = new URLSearchParams(window.location.search);
+        const tabParam = params.get('tab') as DownloadCategory;
+        const validTabs: DownloadCategory[] = ['video', 'reels', 'story', 'photo', 'audio'];
+        if (tabParam && validTabs.includes(tabParam)) {
+          setActiveTabState(tabParam);
+        }
+      }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -233,6 +273,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     } catch {}
     setCurrentPage(page);
+    const forcedTab = getDefaultTabForPage(page);
+    if (forcedTab) {
+      setActiveTabState(forcedTab);
+    }
     setOpenModalState(null);
 
     if (hash) {
@@ -250,6 +294,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Active Category Tab
   const [activeTab, setActiveTabState] = useState<DownloadCategory>(() => {
     try {
+      const initialPage = resolvePageFromPathname(window.location.pathname);
+      const forcedTab = getDefaultTabForPage(initialPage);
+      if (forcedTab) return forcedTab;
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab') as DownloadCategory;
       const validTabs: DownloadCategory[] = ['video', 'reels', 'story', 'photo', 'audio'];
@@ -260,12 +307,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const setActiveTab = (tab: DownloadCategory) => {
     setActiveTabState(tab);
-    setCurrentPage('home');
-    try {
-      const url = new URL(window.location.origin + '/');
-      url.searchParams.set('tab', tab);
-      window.history.replaceState({}, '', url.pathname + url.search);
-    } catch {}
+    const isDownloaderLanding =
+      currentPage === 'reels-downloader' ||
+      currentPage === 'video-downloader' ||
+      currentPage === 'photo-downloader';
+
+    if (!isDownloaderLanding) {
+      setCurrentPage('home');
+      try {
+        const url = new URL(window.location.origin + '/');
+        url.searchParams.set('tab', tab);
+        window.history.replaceState({}, '', url.pathname + url.search);
+      } catch {}
+    }
   };
 
   // Download History

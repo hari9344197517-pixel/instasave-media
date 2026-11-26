@@ -99,6 +99,10 @@ export const DownloadHistoryModal: React.FC = () => {
                   <img
                     src={item.thumbnail}
                     alt={`Preview thumbnail for ${item.title}`}
+                    width={44}
+                    height={44}
+                    loading="lazy"
+                    decoding="async"
                     className="w-11 h-11 rounded-lg object-cover bg-slate-200 dark:bg-slate-700 shrink-0"
                   />
                   <div className="min-w-0">

@@ -8,12 +8,7 @@ export const LegalModals: React.FC = () => {
 
   if (openModal !== 'share') return null;
 
-  const shareOrigin =
-    typeof window !== 'undefined' &&
-    (window.location.hostname === 'instasavemedia.com' ||
-      window.location.hostname === 'www.instasavemedia.com')
-      ? `https://${window.location.hostname}`
-      : 'https://instasavemedia.com';
+  const shareOrigin = 'https://instasavemedia.com';
 
   const handleCopyShareLink = () => {
     navigator.clipboard.writeText(shareOrigin).then(() => {

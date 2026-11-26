@@ -42,10 +42,10 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               <li>
                 <a
-                  href="/?tab=video"
+                  href="/instagram-video-downloader"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleToolClick('video');
+                    navigateTo('video-downloader');
                   }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
@@ -54,10 +54,10 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="/?tab=reels"
+                  href="/instagram-reels-downloader"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleToolClick('reels');
+                    navigateTo('reels-downloader');
                   }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >
@@ -78,10 +78,10 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="/?tab=photo"
+                  href="/instagram-photo-downloader"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleToolClick('photo');
+                    navigateTo('photo-downloader');
                   }}
                   className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer"
                 >

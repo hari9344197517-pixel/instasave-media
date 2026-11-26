@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/Header';
 import { CategoryTabs } from './components/CategoryTabs';
@@ -8,13 +8,25 @@ import { FeaturesGrid } from './components/FeaturesGrid';
 import { SupportedToolsSection } from './components/SupportedToolsSection';
 import { FaqSection } from './components/FaqSection';
 import { AdSenseSlot } from './components/AdSenseSlot';
-import { DownloadHistoryModal } from './components/DownloadHistoryModal';
-import { QrCodeModal } from './components/QrCodeModal';
-import { LegalModals } from './components/LegalModals';
-import { PolicyPages } from './components/PolicyPages';
 import { CookieConsent } from './components/CookieConsent';
 import { Footer } from './components/Footer';
 import { CheckCircle2 } from 'lucide-react';
+
+const LandingPageContent = lazy(() =>
+  import('./components/LandingPageContent').then((m) => ({ default: m.LandingPageContent }))
+);
+const PolicyPages = lazy(() =>
+  import('./components/PolicyPages').then((m) => ({ default: m.PolicyPages }))
+);
+const DownloadHistoryModal = lazy(() =>
+  import('./components/DownloadHistoryModal').then((m) => ({ default: m.DownloadHistoryModal }))
+);
+const QrCodeModal = lazy(() =>
+  import('./components/QrCodeModal').then((m) => ({ default: m.QrCodeModal }))
+);
+const LegalModals = lazy(() =>
+  import('./components/LegalModals').then((m) => ({ default: m.LegalModals }))
+);
 
 const MainContent: React.FC = () => {
   const { toast, currentPage } = useApp();
@@ -23,6 +35,11 @@ const MainContent: React.FC = () => {
   const handleOpenQr = (url: string, title: string) => {
     setQrModalData({ url, title });
   };
+
+  const isLandingDownloaderPage =
+    currentPage === 'reels-downloader' ||
+    currentPage === 'video-downloader' ||
+    currentPage === 'photo-downloader';
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
@@ -58,7 +75,7 @@ const MainContent: React.FC = () => {
             {/* Features Highlights Grid */}
             <FeaturesGrid />
 
-            {/* Supported Downloader Tools Guide (SEO Content) */}
+            {/* Supported Downloader Tools Guide & Safety/Copyright Info */}
             <SupportedToolsSection />
 
             {/* FAQ Accordion Section */}
@@ -67,22 +84,43 @@ const MainContent: React.FC = () => {
             {/* AdSense Slot 3: Above footer */}
             <AdSenseSlot slotId="ad-slot-footer-lead" className="mt-8 mb-4" />
           </>
+        ) : isLandingDownloaderPage ? (
+          <>
+            {/* Category Tabs & Working Downloader Tool */}
+            <CategoryTabs />
+            <DownloadForm onOpenQr={handleOpenQr} />
+
+            {/* AdSense Slot below download interface */}
+            <AdSenseSlot slotId="ad-slot-post-download" className="my-8" />
+
+            {/* Dedicated Landing Page Guide, FAQs & Related Links */}
+            <Suspense fallback={null}>
+              <LandingPageContent />
+            </Suspense>
+
+            {/* AdSense Slot above footer */}
+            <AdSenseSlot slotId="ad-slot-footer-lead" className="mt-8 mb-4" />
+          </>
         ) : (
-          <PolicyPages />
+          <Suspense fallback={null}>
+            <PolicyPages />
+          </Suspense>
         )}
       </main>
 
       {/* Footer */}
       <Footer />
 
-      {/* Modals & Consent */}
-      <DownloadHistoryModal />
-      <QrCodeModal
-        url={qrModalData?.url || null}
-        title={qrModalData?.title || null}
-        onClose={() => setQrModalData(null)}
-      />
-      <LegalModals />
+      {/* Deferred Modals & Consent */}
+      <Suspense fallback={null}>
+        <DownloadHistoryModal />
+        <QrCodeModal
+          url={qrModalData?.url || null}
+          title={qrModalData?.title || null}
+          onClose={() => setQrModalData(null)}
+        />
+        <LegalModals />
+      </Suspense>
       <CookieConsent />
 
       {/* Toast Notification */}

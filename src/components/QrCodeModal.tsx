@@ -59,8 +59,11 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ url, title, onClose })
           <img
             src={qrImageUrl}
             alt={`QR code to download ${title || 'Instagram media'} on mobile`}
+            width={192}
+            height={192}
             className="w-48 h-48 rounded-lg mx-auto"
             loading="lazy"
+            decoding="async"
           />
         </div>
 

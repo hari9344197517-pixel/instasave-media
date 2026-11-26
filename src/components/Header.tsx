@@ -66,8 +66,8 @@ export const Header: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'InstaSave Media – Instagram Reels, Post & Video Downloader',
-          text: 'Preview and save owner-authorized public Instagram Reels, Posts, Videos, Photos, and Audio with InstaSave Media.',
+          title: 'Instagram Video, Reels & Post Downloader – InstaSaveMedia',
+          text: 'Download publicly accessible Instagram Reels, videos and posts you are authorized to save with InstaSaveMedia.',
           url: `https://instasavemedia.com${typeof window !== 'undefined' ? window.location.pathname : '/'}`,
         });
       } catch {
@@ -88,7 +88,10 @@ export const Header: React.FC = () => {
             href="/"
             onClick={(e) => {
               e.preventDefault();
-              handleSelectCategory('video');
+              setMobileMenuOpen(false);
+              setToolsOpen(false);
+              setActiveTab('video');
+              navigateTo('home');
             }}
             className="flex items-center gap-2.5 group cursor-pointer"
           >
@@ -109,10 +112,10 @@ export const Header: React.FC = () => {
         {/* Center: Desktop Navigation Links */}
         <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
           <a
-            href="/?tab=video"
+            href="/instagram-video-downloader"
             onClick={(e) => {
               e.preventDefault();
-              handleSelectCategory('video');
+              navigateTo('video-downloader');
             }}
             className="px-3.5 py-2 rounded-lg hover:text-pink-600 dark:hover:text-pink-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap cursor-pointer"
           >
@@ -145,10 +148,11 @@ export const Header: React.FC = () => {
             {toolsOpen && (
               <div className="absolute left-0 mt-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl border border-slate-200 dark:border-slate-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                 <a
-                  href="/?tab=reels"
+                  href="/instagram-reels-downloader"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleSelectCategory('reels');
+                    setToolsOpen(false);
+                    navigateTo('reels-downloader');
                   }}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer"
                 >
@@ -156,10 +160,11 @@ export const Header: React.FC = () => {
                   <span>{t.navReels}</span>
                 </a>
                 <a
-                  href="/?tab=photo"
+                  href="/instagram-photo-downloader"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleSelectCategory('photo');
+                    setToolsOpen(false);
+                    navigateTo('photo-downloader');
                   }}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer"
                 >
@@ -314,10 +319,11 @@ export const Header: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <a
-              href="/?tab=video"
+              href="/instagram-video-downloader"
               onClick={(e) => {
                 e.preventDefault();
-                handleSelectCategory('video');
+                setMobileMenuOpen(false);
+                navigateTo('video-downloader');
               }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >
@@ -325,10 +331,11 @@ export const Header: React.FC = () => {
               <span>{t.tab_video}</span>
             </a>
             <a
-              href="/?tab=reels"
+              href="/instagram-reels-downloader"
               onClick={(e) => {
                 e.preventDefault();
-                handleSelectCategory('reels');
+                setMobileMenuOpen(false);
+                navigateTo('reels-downloader');
               }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >
@@ -347,10 +354,11 @@ export const Header: React.FC = () => {
               <span>{t.tab_story}</span>
             </a>
             <a
-              href="/?tab=photo"
+              href="/instagram-photo-downloader"
               onClick={(e) => {
                 e.preventDefault();
-                handleSelectCategory('photo');
+                setMobileMenuOpen(false);
+                navigateTo('photo-downloader');
               }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 hover:bg-pink-50 dark:hover:bg-pink-950/30"
             >

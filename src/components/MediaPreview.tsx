@@ -346,6 +346,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
                 src={currentItem.thumbnail || currentItem.url}
                 alt={data.title || `Instagram photo preview from @${data.author.username}`}
                 referrerPolicy="no-referrer"
+                decoding="async"
                 className="w-full h-full max-h-[500px] object-contain rounded-2xl"
               />
 
@@ -404,6 +405,10 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
                     <img
                       src={it.thumbnail}
                       alt={`Slide ${idx + 1} of ${data.title || `Instagram carousel by @${data.author.username}`}`}
+                      width={56}
+                      height={56}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -460,6 +465,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
                   src={currentItem.thumbnail || currentItem.url}
                   alt={`Public Instagram Story preview from @${data.author.username}`}
                   referrerPolicy="no-referrer"
+                  decoding="async"
                   className="w-full h-full object-contain"
                 />
               )}
@@ -626,6 +632,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ data, onReset, onOpe
             src={imageModalUrl}
             alt={`Full resolution preview of ${data.title || `Instagram media by @${data.author.username}`}`}
             referrerPolicy="no-referrer"
+            decoding="async"
             className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
           />
         </div>

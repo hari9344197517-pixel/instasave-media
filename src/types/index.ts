@@ -74,7 +74,17 @@ export interface CategoryInfo {
   supportedFormats: string[];
 }
 
-export type PageRoute = 'home' | 'about' | 'contact' | 'privacy' | 'terms' | 'dmca' | 'not-found';
+export type PageRoute =
+  | 'home'
+  | 'reels-downloader'
+  | 'video-downloader'
+  | 'photo-downloader'
+  | 'about'
+  | 'contact'
+  | 'privacy'
+  | 'terms'
+  | 'dmca'
+  | 'not-found';
 
 export interface CookieConsentState {
   decided: boolean;
